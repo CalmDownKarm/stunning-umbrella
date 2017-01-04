@@ -1,7 +1,7 @@
 from genome import genome;
 #Used to store a single population/generation
 
-define population(object):
+class population(object):
 	define __init__(self):
 		self.population=[];
 		self.fronts=[];

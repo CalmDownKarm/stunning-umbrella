@@ -1,4 +1,8 @@
 #utils.py
-import random
+from random import randrange, uniform
 from constants import MOGA_constants
-print MOGA_constants.POPULATION_SIZE
+
+
+
+
+
