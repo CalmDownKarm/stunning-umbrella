@@ -1,8 +1,17 @@
 #Contains all information about the problem - the fitness functions, the bounds to the searchspace, etc
 
-
 class Problem(object):
-	define __init__(self):
-		LOWER_LIMIT = [0,0];
-		UPPER_LIMIT = [3,3];
-		
+	#def __init__(self):
+	lower_bound = 0.0;
+	upper_bound = 2.0;
+#You want multiple objective functions for a single variable 
+#Eventually we need to add support to fveind the intersection of various search spaces
+	def fitness_1(self,x):
+		return x*x;
+	def fitness_2(self,x):
+		return 1.0/x;
+
+Nigger = Problem();
+
+
+
