@@ -1,7 +1,7 @@
 #utils.py
 from random import randint
 from constants import MOGA_constants
-from problem import Nigger as p
+from problem import problem_instance as p
 
 
 def generate_genome():

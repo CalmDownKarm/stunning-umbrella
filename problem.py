@@ -11,7 +11,7 @@ class Problem(object):
 	def fitness_2(self,x):
 		return 1.0/x;
 
-Nigger = Problem();
+problem_instance = Problem();
 
 
 
