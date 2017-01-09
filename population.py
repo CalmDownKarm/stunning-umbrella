@@ -1,5 +1,5 @@
 from genome import genome
-from utils import dominates
+#from utils import dominates
 #Used to store a single population/generation
 
 class population(object):
@@ -20,22 +20,30 @@ class population(object):
                 if(i!=j):
                     a = self.population[i]
                     b = self.population[j]
-                    if(dominates(a,b)):
-                        a.add_Sp(b);
+                    if(a.dominates(b)):
+                        a.add_Sp(j);
                         b.increment_np();
-                    elif (dominates(b,a)):
-                        b.add_Sp(a);
+                    elif (b.dominates(a)):
+                        b.add_Sp(i);
                         a.increment_np();
+    #TODO: ADD ORGANIZATION OF ELEMENTS INTO FRONTS BASED UPON Np and Sp
                 
-parents = population() #stores a generation
-for i in xrange(10):
-    i = genome()
-    i.initialize()
-    i.evaluate_fitness()
-    parents.insert(i)
+# parents = population() #stores a generation
 
-parents.perform_nondominated_sorting()
-for i in xrange(10):  
-    i= list(parents.population[i].Sp)
-    print i[0].gene;
+# for i in xrange(10):
+#     i = genome()
+#     i.initialize()
+#     i.evaluate_fitness()
+#     parents.insert(i)
+# print 'POPULATION \n---------------------------------------------'
+# parents.print_pop()
+# print '-------------------------------------------------------------'
+
+# parents.perform_nondominated_sorting()
+# for i in xrange(10):  
+#     j= list(parents.population[i].Sp)
+#     print j
+
+# for i in iter(parents.population):
+#     print 'GENE' + str(i.gene) + 'np '+ str(i.np)
     
