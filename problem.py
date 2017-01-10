@@ -10,7 +10,7 @@ class Problem(object):
     def fitness_1(self,x):
         return x*x;
     def fitness_2(self,x):
-        return x;
+        return 1.0/x;
 
 problem_instance = Problem();
 

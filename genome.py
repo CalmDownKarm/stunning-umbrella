@@ -32,7 +32,7 @@ class genome(object):
     def add_Sp(self,genome):
         self.Sp.add(genome);
     
-    def dominates(self,genome_2):
+    def dominates(self,genome_2): #I don't think my implementation works when Im minizing cuz it assumes higher fitness is better. 
         genome_1 = self;
         temp = []
         for i in xrange(0,p.number_of_objectives-1):
