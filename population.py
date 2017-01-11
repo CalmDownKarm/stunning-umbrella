@@ -34,10 +34,25 @@ class population(object):
         # print 'FRONTS----------------'
         # print self.fronts[0]
         for i in xrange(0,len(temp_list_for_front)):
-            
+            temp_front =[]
+            Sp_list = list(temp_list_for_front[i].Sp)
+            for j in xrange(0,len(Sp_list)):
+                #print Sp_list[i].np
+                Sp_list[i].np-=1
+                #print '-------'
+                #print Sp_list[i].np      
+                if Sp_list[i].np == 0:
+                    temp_front.append(Sp_list[i])
+            #print '-------'
+            self.fronts.append(temp_front)
 
 
-    #TODO: ADD ORGANIZATION OF ELEMENTS INTO FRONTS BASED UPON Np and Sp
+            #Look at SP for every element in the front and reduce it's np by 1
+            #if np==0 then create a new front and iterate. 
+
+
+
+   
                 
 parents = population() #stores a generation
 
