@@ -31,13 +31,11 @@ class population(object):
 
         #At this point domination counts of every population member should be finalized.
         self.fronts.append(temp_list_for_front) #doesn't copy I don't think. 
-        print 'FRONTS----------------'
-        print self.fronts[0]
-        temp_list_for_front = [] #Potential memory leak? I guess I can still get reference to the old list by iterating through fronts 
-        print '-----------FRONTS AFTER CLEARING'
-        print self.fronts[0]
-         #Now we visit every member of Sp from all items in the first front and reduce domination counts.
-        #Every iteration that has Np hit 0 becomes a new front. Thus we can have potentially N-1 fronts. 
+        # print 'FRONTS----------------'
+        # print self.fronts[0]
+        for i in xrange(0,len(temp_list_for_front)):
+            
+
 
     #TODO: ADD ORGANIZATION OF ELEMENTS INTO FRONTS BASED UPON Np and Sp
                 
