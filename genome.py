@@ -33,6 +33,8 @@ class genome(object):
 
     def add_Sp(self, genome):
         self.Sp.add(genome)
+    def printgenome(self):
+        print 'Gene ' + repr(self.gene) + ' np ' + repr(self.np) 
 
     # I don't think my implementation works when Im minizing cuz it assumes
     # higher fitness is better.
