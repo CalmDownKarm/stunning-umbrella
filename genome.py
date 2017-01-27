@@ -36,9 +36,16 @@ class genome(object):
     def printgenome(self):
         print 'Gene ' + repr(self.gene) + ' np ' + repr(self.np) 
 
+    def binary_crossover(self):
+        # Performs a 1 point crossover
+
+    def mutation(self):
+        # Performs mutation
+
     # I don't think my implementation works when Im minizing cuz it assumes
     # higher fitness is better.
     def dominates(self, genome_2):
+        #THIS DOMINATION FUNCTION IS JUST FUCKING WRONG. FIX THIS SHIT ASAP
         genome_1 = self
         temp = []
         for i in xrange(0, p.number_of_objectives - 1):
@@ -53,3 +60,5 @@ class genome(object):
         # should return True if Genome_1 dominates Genome_2
         else:
             return False
+
+

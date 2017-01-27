@@ -17,8 +17,9 @@ class population(object):
             print ' gene ' + repr(i.gene) + ' np ' + repr(i.np)
 
     def perform_nondominated_sorting(self):
-        # Stores how many elements in the population have been organized into
-        # fronts.
+        # Takes a combined population and organizes it into fronts.
+        # TODO ADD A combined population after rest of genetic operators are
+        # written
         frontcounter = 1
         organizedelements = 0
         temp_list_for_front = []
@@ -44,38 +45,41 @@ class population(object):
         # first front is now on the stack.
         # now pop the front at the top of the stack, look at Sp of every
         # element and decrease np by 1
-        loopcounter = 0
-        while((organizedelements < len(self.population))or(frontcounter<=len(self.population)-1)):
-        # while (loopcounter<10):
+        # loopcounter = 0
+        while((organizedelements <= len(self.population))or
+              (frontcounter <= len(self.population) - 1)):
+            # while (loopcounter<10):
             # temp = copy.deepcopy(self.fronts[-1])  # copy the last front
             temp = self.fronts[-1]
-            print 'Front here----------------------'
-            for foo in temp:
-                foo.printgenome()
-            print '------------------'
-            print 'SP of Front ------------------'
+            # print 'Front here----------------------'
+            # for foo in temp:
+            #     foo.printgenome()
+            # print '------------------'
+            # print 'SP of Front ------------------'
             temp_list_for_front = []
             for x in temp:
                 for y in x.Sp:
-                    y.printgenome()
+                    # y.printgenome()
                     y.np -= 1
                     if(y.np == 0):
                         temp_list_for_front.append(y)
-            print 'Elements in new front' + repr(len(temp_list_for_front))
-            print 'Organized Elements'  + repr(organizedelements)
-            organizedelements+=len(temp_list_for_front)
-            self.fronts.append(temp_list_for_front)
-            frontcounter+=1
-            # loopcounter+=1
-            
-            # for x in xrange(0, len(temp)):
-            #     for y in temp[x].Sp:
-            #         y.np -= 1
-            #         if(y.np == 0):
-            #             temp_list_for_front.append(y)
-            # # At this point the new front has been filled.
-            # self.fronts.append(temp_list_for_front)
-            # organizedelements += len(temp_list_for_front)
+            if(temp_list_for_front):
+                organizedelements += len(temp_list_for_front)
+                self.fronts.append(temp_list_for_front)
+                frontcounter += 1
+                # print 'Elements in new front' + repr(len(temp_list_for_front))
+                # print 'Organized Elements' + repr(organizedelements)
+
+            else:
+                organizedelements = len(self.population) + 1
+        # self.fronts contains all the fronts at this point.
+        # TODO take in an additional N population members and apply to the
+        # entire combined population
+
+    def crowded_tournament_selection(self):
+        # Performs the crowded tournament selection operator
+
+    
 
 
 parents = population()  # stores a generation
