@@ -38,9 +38,11 @@ class genome(object):
 
     def binary_crossover(self):
         # Performs a 1 point crossover
+        return False
 
     def mutation(self):
         # Performs mutation
+        return False
 
     # I don't think my implementation works when Im minizing cuz it assumes
     # higher fitness is better.
