@@ -15,6 +15,7 @@ class genome(object):
         self.Sp = set()  # Set of all values dominated by the genome.
         self.gene = None
         self.fitnesses = []
+        self.fitness = 0
 
     def initialize(self):
         self.gene = generate_genome()
@@ -31,10 +32,14 @@ class genome(object):
     def increment_np(self):
         self.np += 1
 
+    def set_fitness(self, frontcounter):
+        self.fitness = frontcounter
+
     def add_Sp(self, genome):
         self.Sp.add(genome)
+
     def printgenome(self):
-        print 'Gene ' + repr(self.gene) + ' np ' + repr(self.np) 
+        print 'Gene ' + repr(self.gene) + ' np ' +repr(self.np) + ' fitness ' + repr(self.fitness)
 
     def binary_crossover(self):
         # Performs a 1 point crossover
@@ -47,7 +52,7 @@ class genome(object):
     # I don't think my implementation works when Im minizing cuz it assumes
     # higher fitness is better.
     def dominates(self, genome_2):
-        #THIS DOMINATION FUNCTION IS JUST FUCKING WRONG. FIX THIS SHIT ASAP
+        # THIS DOMINATION FUNCTION IS JUST FUCKING WRONG. FIX THIS SHIT ASAP
         genome_1 = self
         temp = []
         for i in xrange(0, p.number_of_objectives - 1):
@@ -62,5 +67,3 @@ class genome(object):
         # should return True if Genome_1 dominates Genome_2
         else:
             return False
-
-
