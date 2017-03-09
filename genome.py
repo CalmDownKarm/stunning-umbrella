@@ -14,8 +14,8 @@ class genome(object):
         self.np = 0  # Stores Domination Count
         self.Sp = set()  # Set of all values dominated by the genome.
         self.gene = None
-        self.fitnesses = []
-        self.fitness = 0
+        self.fitnesses = [] # Stores value of objectives for that gene. 
+        self.front = 0 # Stores which front the element sits in. 
 
     def initialize(self):
         self.gene = generate_genome()
@@ -32,8 +32,8 @@ class genome(object):
     def increment_np(self):
         self.np += 1
 
-    def set_fitness(self, frontcounter):
-        self.fitness = frontcounter
+    def set_front(self, frontcounter):
+        self.front = frontcounter
 
     def add_Sp(self, genome):
         self.Sp.add(genome)
