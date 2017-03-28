@@ -16,8 +16,8 @@ class genome(object):
         # Stores the values of the gene along each objective function
         self.objective_function_values = []
         # Used for non dominated Sorting
-        self.np = None  # Domination Count according to NSGA
-        self.Sp = []  # Set of genomes dominated by the gene.
+        self.np = 0  # Domination Count according to NSGA
+        self.Sp = set()  # Set of genomes dominated by the gene.
         # Used for Crowding distance
         self.crowding_distance = None
 
@@ -26,12 +26,22 @@ class genome(object):
             + '\nfitness_1: ' + repr(self.objective_function_values[0])\
             + '\nfitness_2: ' + repr(self.objective_function_values[1])\
             + '\nnp: ' + repr(self.np)\
+            + '\nFront: ' + repr(self.front)\
             + '\nCrowding Distance: ' + repr(self.crowding_distance)
 
     def evaluate_objective_functions(self):
         self.objective_function_values.append(p.fitness_1(self.gene))
         self.objective_function_values.append(p.fitness_2(self.gene))
 
+    def dominates(self,genome_2):
+    	greaterorequal = 0
+    	for x in xrange(0,p.number_of_objectives):
+    		if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
+    			greaterorequal+=1
+    	if(greaterorequal==p.number_of_objectives):
+    		return True
+    	else:
+    		return False
 
 # foo = genome()
 # foo.evaluate_objective_functions()

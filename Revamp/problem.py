@@ -4,8 +4,8 @@
 
 class Problem(object):
     # def __init__(self):
-    lower_bound = 0.0
-    upper_bound = 2.0
+    lower_bound = -1000
+    upper_bound = 1000
     number_of_objectives = 2
 
 
@@ -16,7 +16,7 @@ class Problem(object):
         return x * x
 
     def fitness_2(self, x):
-        return 1.0 / x
+        return (x-2)**2
 
 
 problem_instance = Problem()

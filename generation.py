@@ -87,16 +87,16 @@ class generation(object):
                 self.matingpool.append(genome1)
                 self.matingpool.append(genome2)
 
-    def run_tournament_with_crowding_distance(self, genome1, genome2):
-        # win the tournament if -
-        # better front (lower is better)
-        # higher crowding distance.
-        if((len(self.matingpool) < len(self.population))and
-           (genome1 != genome2)):
-            if(genome1.front < genome2.front):
-                if(genome1.crowding_distance > genome2.crowding_distance):
-                    self.matingpool.append(genome1)
-                else
+    # def run_tournament_with_crowding_distance(self, genome1, genome2):
+    #     # win the tournament if -
+    #     # better front (lower is better)
+    #     # higher crowding distance.
+    #     if((len(self.matingpool) < len(self.population))and
+    #        (genome1 != genome2)):
+    #         if(genome1.front < genome2.front):
+    #             if(genome1.crowding_distance > genome2.crowding_distance):
+    #                 self.matingpool.append(genome1)
+    #             else
                     
 
 
