@@ -1,0 +1,3 @@
+# Stores MOGA constants
+LENGTH_OF_BIT_STRING = 32
+POPULATION_SIZE = 10
