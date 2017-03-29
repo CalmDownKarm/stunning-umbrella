@@ -1,14 +1,14 @@
 # Genome File
 import moga_constant as c
 from problem import problem_instance as p
-from random import randint
+from random import random
 
 
 class genome(object):
     def __init__(self):
         # Fundamentals
         # The actual Value of the gene
-        self.gene = randint(0, (2**c.LENGTH_OF_BIT_STRING) - 1)
+        self.gene = random()*(2**(c.LENGTH_OF_BIT_STRING)-1)
         # Now we have to scale the genome
         self.gene = p.lower_bound + (p.upper_bound - p.lower_bound) * \
             self.gene / ((2**c.LENGTH_OF_BIT_STRING) - 1)

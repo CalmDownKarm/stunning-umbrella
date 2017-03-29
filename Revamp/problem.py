@@ -16,7 +16,6 @@ class Problem(object):
         return x * x
 
     def fitness_2(self, x):
-        return (x-2)**2
-
+        return (x - 2) ** 2
 
 problem_instance = Problem()
