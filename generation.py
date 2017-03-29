@@ -94,8 +94,8 @@ class generation(object):
                 sorted_ele = len(self.population_members) + 1
 
         self.no_of_fronts = front_counter - 1
-        # print 'sorted-elements' + repr(sorted_ele) + \
-        #     'Len of temp front' + repr(len(temp_list_for_front))
+        self.population_members.sort(key=lambda x: x.front)
+
 
     def calculate_crowding_distance(self):
         new_members = []
@@ -148,13 +148,14 @@ class generation(object):
     def admin_hain(self, offspring):
         temp_list = []
         random.shuffle(offspring)
-        for x in xrange(c.MUTATION_PROBABILITY * len(offspring)):
+        for x in xrange(int(c.MUTATION_PROBABILITY * len(offspring))):
                 # p = offspring.pop()
-            temp_list.append(genome(polynomial_mutation(offspring.pop().gene)))
+            temp_list.append(genome(self.polynomial_mutation(offspring.pop().gene)))
         for x in temp_list:
             offspring.append(x)
+        return offspring
 
-    def polynomial_mutation(parent):
+    def polynomial_mutation(self,parent):
         u = random.uniform(0, 1)
         if u < 0.5:
             variation = ((2 * u)**(1.0 / c.MUTATION_INDEX + 1)) - 1
@@ -162,13 +163,4 @@ class generation(object):
             variation = 1 - ((2 * (1 - u))**(1.0 / c.MUTATION_INDEX + 1))
         return parent + (p.upper_bound - p.lower_bound) * variation
 
-foo = generation()
-# foo.initialize()
-new_population = []
-foo.perform_non_dominated_sort()
-foo.calculate_crowding_distance()
-foo.create_mating_pool(False)
-# foo.population_members.sort(key=lambda x: x.front, reverse=True)
-new_population = foo.let_them_have_sex()
-for x in new_population:
-    x.print_genome()
+
