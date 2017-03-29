@@ -146,21 +146,21 @@ class generation(object):
         return (child_1, child_2)
 
     def admin_hain(self, offspring):
-    	temp_list = []
-    	random.shuffle(offspring)
-    	for x in xrange(c.MUTATION_PROBABILITY * len(offspring)):
-    		# p = offspring.pop()
-    		temp_list.append(genome(polynomial_mutation(offspring.pop().gene)))
-    	for x in temp_list:
-    		offspring.append(x)
+        temp_list = []
+        random.shuffle(offspring)
+        for x in xrange(c.MUTATION_PROBABILITY * len(offspring)):
+                # p = offspring.pop()
+            temp_list.append(genome(polynomial_mutation(offspring.pop().gene)))
+        for x in temp_list:
+            offspring.append(x)
 
     def polynomial_mutation(parent):
-		u = random.uniform(0, 1)
-		if u < 0.5:
-			variation = ((2*u)**(1.0/c.MUTATION_INDEX+1))-1
-		else:
-			variation = 1-((2*(1-u))**(1.0/c.MUTATION_INDEX+1))
-		return parent + (p.upper_bound - p.lower_bound)*variation
+        u = random.uniform(0, 1)
+        if u < 0.5:
+            variation = ((2 * u)**(1.0 / c.MUTATION_INDEX + 1)) - 1
+        else:
+            variation = 1 - ((2 * (1 - u))**(1.0 / c.MUTATION_INDEX + 1))
+        return parent + (p.upper_bound - p.lower_bound) * variation
 
 foo = generation()
 # foo.initialize()
