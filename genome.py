@@ -1,69 +1,54 @@
-# Contains the Genome for MOGA, Add genome elements here
-from random import randint
-from constants import MOGA_constants
-from utils import generate_genome, scale_genome
+# Genome File
+import moga_constant as c
 from problem import problem_instance as p
+from random import random
 
 
 class genome(object):
-
-    def __init__(self):
-        # Members are pretty self explanatory
-        self.rank = None
+    def __init__(self, god=None):
+        if god is None:
+            # Fundamentals
+            # The actual Value of the gene
+            self.gene = random() * (2**(c.LENGTH_OF_BIT_STRING) - 1)
+        # Now we have to scale the genome
+            self.gene = p.lower_bound + (p.upper_bound - p.lower_bound) * \
+                self.gene / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+        else:
+            self.gene = god
+        self.front = None  # The front in which the genome lies. front = rank
+        # Stores the values of the gene along each objective function
+        self.objective_function_values = []
+        # Used for non dominated Sorting
+        self.np = 0  # Domination Count according to NSGA
+        self.Sp = set()  # Set of genomes dominated by the gene.
+        # Used for Crowding distance
         self.crowding_distance = None
-        self.np = 0  # Stores Domination Count
-        self.Sp = set()  # Set of all values dominated by the genome.
-        self.gene = None
-        self.fitnesses = [] # Stores value of objectives for that gene. 
-        self.front = 0 # Stores which front the element sits in. 
+        self.evaluate_objective_functions()
 
-    def initialize(self):
-        self.gene = generate_genome()
-        # print self.gene;
-        self.gene = scale_genome(self.gene)
-        # print self.gene;
 
-    def evaluate_fitness(self):
-        # if(p.fitness_1(self.gene)):
-        self.fitnesses.append(p.fitness_1(self.gene))
-        # if(p.fitness_2(self.gene)):
-        self.fitnesses.append(p.fitness_2(self.gene))
 
-    def increment_np(self):
-        self.np += 1
+    def print_genome(self):
+        print 'Gene: ' + repr(self.gene)\
+            + '\nfitness_1: ' + repr(self.objective_function_values[0])\
+            + '\nfitness_2: ' + repr(self.objective_function_values[1])\
+            + '\nnp: ' + repr(self.np)\
+            + '\nFront: ' + repr(self.front)\
+            + '\nCrowding Distance: ' + repr(self.crowding_distance)
 
-    def set_front(self, frontcounter):
-        self.front = frontcounter
+    def evaluate_objective_functions(self):
+        self.objective_function_values.append(p.fitness_1(self.gene))
+        self.objective_function_values.append(p.fitness_2(self.gene))
 
-    def add_Sp(self, genome):
-        self.Sp.add(genome)
-
-    def printgenome(self):
-        print 'Gene ' + repr(self.gene) + ' np ' +repr(self.np) + ' fitness ' + repr(self.fitness)
-
-    def binary_crossover(self):
-        # Performs a 1 point crossover
-        return False
-
-    def mutation(self):
-        # Performs mutation
-        return False
-
-    # I don't think my implementation works when Im minizing cuz it assumes
-    # higher fitness is better.
     def dominates(self, genome_2):
-        # THIS DOMINATION FUNCTION IS JUST FUCKING WRONG. FIX THIS SHIT ASAP
-        genome_1 = self
-        temp = []
-        for i in xrange(0, p.number_of_objectives - 1):
-            temp.append(0.0)
-            temp[i] = genome_1.fitnesses[i] - \
-                genome_2.fitnesses[i]  # Case Completely dominates
-        sum = 0.0
-        for i in xrange(0, len(temp)):
-            sum += temp[i]
-        if(sum > 0.0):
+        greaterorequal = 0
+        for x in xrange(0, p.number_of_objectives):
+            if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
+                greaterorequal += 1
+        if(greaterorequal == p.number_of_objectives):
             return True
-        # should return True if Genome_1 dominates Genome_2
         else:
             return False
+
+# foo = genome()
+# foo.evaluate_objective_functions()
+# foo.print_genome()

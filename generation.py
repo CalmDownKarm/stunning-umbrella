@@ -1,148 +1,174 @@
+# Handles all the code for each generation
+import moga_constant as c
 from genome import genome
-from random import randint
-# Used to store a single population/generation
+import numpy.random as r
+from problem import problem_instance as p
+import random
 
 
 class generation(object):
     def __init__(self):
-        self.population = []
-        self.fronts = []
-        self.matingpool = []
+        # Stores all the members of the current generation Set
+        self.population_members = []
+        self.fronts = []  # Stores all the fronts for each generation.
+        self.matingpool = []  # Stores Mating Pool for the current Crossover
+        self.no_of_fronts = None  # Stores total Number of fronts.
+        for i in xrange(0, c.POPULATION_SIZE):
+            i = genome()
+            # i.evaluate_objective_functions()
+            self.population_members.append(i)
 
-    def insert(self, genome):
-        self.population.append(genome)
+    def print_population(self):
+        print '----Population Begin---------'
+        for i in self.population_members:
+            i.print_genome()
+            print '----'
+        print '----------Population End-----'
 
-    def print_pop(self):
-        for i in iter(self.population):
-            i.printgenome()
+    def create_mating_pool(self, flag):
+        # call flag as true if first iteration. else false
+        # Run the tournament and return a matingpool
+        if(flag):
+            # if crowding distance isn't set use only front.
+            while(len(self.matingpool) < len(self.population_members)):
+                p = r.randint(0, len(self.population_members), 2)
+                if(p[0] != p[1]):
+                    geneA = self.population_members[p[0]]
+                    geneB = self.population_members[p[1]]
+                    if geneA.front < geneB.front:
+                        self.matingpool.append(geneA)
+                    elif geneA.front > geneB.front:
+                        self.matingpool.append(geneB)
+                    else:
+                        self.matingpool.append(geneA)
+                        self.matingpool.append(geneB)
+        else:
+            while(len(self.matingpool) < len(self.population_members)):
+                p = r.randint(0, len(self.population_members), 2)
+                if(p[0] != p[1]):
+                    geneA = self.population_members[p[0]]
+                    geneB = self.population_members[p[1]]
+                    if geneA.front < geneB.front:
+                        self.matingpool.append(geneA)
+                    elif geneA.front > geneB.front:
+                        self.matingpool.append(geneB)
+                    else:
+                        if geneA.crowding_distance > geneB.crowding_distance:
+                            self.matingpool.append(geneA)
+                        elif geneA.crowding_distance < geneB.crowding_distance:
+                            self.matingpool.append(geneB)
+                        else:
+                            self.matingpool.append(geneA)
+                            self.matingpool.append(geneB)
 
-    def perform_nondominated_sorting(self):
-        # Takes a combined population and organizes it into fronts.
-        # TODO ADD A combined population after rest of genetic operators are
-        # written
-        frontcounter = 1
-        organizedelements = 0
+    def perform_non_dominated_sort(self):
+        front_counter = 1
         temp_list_for_front = []
-        for i in xrange(0, len(self.population)):
-            for j in xrange(0, len(self.population)):
+        sorted_ele = 0
+        for i in self.population_members:
+            for j in self.population_members:
                 if(i != j):
-                    a = self.population[i]
-                    b = self.population[j]
-                    if(a.dominates(b)):
-                        a.add_Sp(b)  # Add b to dominated solutions set
-                    elif (b.dominates(a)):
-                        a.increment_np()  # add B's domination count.
-            if (self.population[i].np == 0):
-                # Domination Count is 0 so we can add it to the first front.
-                self.population[i].set_front(frontcounter)
-                temp_list_for_front.append(self.population[i])
-
-        # At this point domination counts of every population member should be
-        # finalized.
-        self.fronts.append(temp_list_for_front)
-        # Increment the organized elements counter by the number of the
-        # elements
-        organizedelements += len(temp_list_for_front)
-        # first front is now on the stack.
-        # now pop the front at the top of the stack, look at Sp of every
-        # element and decrease np by 1
-        # loopcounter = 0
-        while((organizedelements <= len(self.population))or
-              (frontcounter <= len(self.population) - 1)):
-            # while (loopcounter<10):
-            # temp = copy.deepcopy(self.fronts[-1])  # copy the last front
-            temp = self.fronts[-1]
-            # print 'Front here----------------------'
-            # for foo in temp:
-            #     foo.printgenome()
-            # print '------------------'
-            # print 'SP of Front ------------------'
+                    if(i.dominates(j)):
+                        i.Sp.add(j)
+                    elif(j.dominates(i)):
+                        i.np += 1
+            if(i.np == 0):
+                i.front = front_counter
+                temp_list_for_front.append(i)
+        print "sorted element pre update" + repr(sorted_ele)
+        sorted_ele += len(temp_list_for_front)
+        while((sorted_ele <= len(self.population_members))or
+                (front_counter < len(self.population_members))):
+            previous_front = temp_list_for_front
             temp_list_for_front = []
-            for x in temp:
+            front_counter += 1
+            for x in previous_front:
                 for y in x.Sp:
-                    # y.printgenome()
                     y.np -= 1
                     if(y.np == 0):
-                        y.set_front(frontcounter)
+                        y.front = front_counter
                         temp_list_for_front.append(y)
             if(temp_list_for_front):
-                organizedelements += len(temp_list_for_front)
-                self.fronts.append(temp_list_for_front)
-                frontcounter += 1
+                sorted_ele += len(temp_list_for_front)
             else:
-                organizedelements = len(self.population) + 1
-        # self.fronts contains all the fronts at this point.
-        # TODO take in an additional N population members and apply to the
-        # entire combined population
+                sorted_ele = len(self.population_members) + 1
 
-    def run_tournament(self, genome1, genome2):
-
-        if((len(self.matingpool) < len(self.population))and
-           (genome1 != genome2)):
-            if(genome1.front < genome2.front):
-                self.matingpool.append(genome1)
-            elif(genome1.front > genome2.front):
-                self.matingpool.append(genome2)
-            else:
-                self.matingpool.append(genome1)
-                self.matingpool.append(genome2)
-
-    # def run_tournament_with_crowding_distance(self, genome1, genome2):
-    #     # win the tournament if -
-    #     # better front (lower is better)
-    #     # higher crowding distance.
-    #     if((len(self.matingpool) < len(self.population))and
-    #        (genome1 != genome2)):
-    #         if(genome1.front < genome2.front):
-    #             if(genome1.crowding_distance > genome2.crowding_distance):
-    #                 self.matingpool.append(genome1)
-    #             else
-                    
-
+        self.no_of_fronts = front_counter - 1
+        # print 'sorted-elements' + repr(sorted_ele) + \
+        #     'Len of temp front' + repr(len(temp_list_for_front))
 
     def calculate_crowding_distance(self):
-        for x in self.fronts:
-            if(len(x) > 1):
-                # Sort based on objectives.
-                sorted(x, key=lambda genome: genome.fitnesses[0])
+        new_members = []
+        for front_no in xrange(1, self.no_of_fronts + 1):
+            temp = []
+            for member in self.population_members:
+                if member.front == front_no:
+                    temp.append(member)
+            if(len(temp) == 1):
+                temp[0].crowding_distance = float('inf')
+            else:
+                for member in temp:
+                    member.crowding_distance = 0
+                for y in xrange(0, p.number_of_objectives):
+                    temp.sort(key=lambda x: x.objective_function_values[y])
+                    temp[0].crowding_distance = float("inf")
+                    temp[len(temp) - 1].crowding_distance = float("inf")
+                    for i in xrange(1, len(temp) - 1):
+                        temp[i].crowding_distance += (temp[i + 1].objective_function_values[y] -
+                                                      temp[i - 1].objective_function_values[
+                            y]) / (temp[len(temp) - 1].objective_function_values[y] - temp[0].objective_function_values[y])
+            for boob in temp:
+                new_members.append(boob)
+        self.population_members = []
+        self.population_members = new_members
 
-    def tournament_selection(self):
-        while(len(self.matingpool) < len(self.population)):
-            # Performs the crowded tournament selection operator
-            for x in self.population:
-                y = self.population[randint(0, len(self.population) - 1)]
-                self.run_tournament(x, y)
-        # TODO: Inculcate crowded distance operator.
+    def let_them_have_sex(self):
+        offspring = []
+        # print "mating pool"
+        random.shuffle(self.matingpool)
+        while(len(self.matingpool) > 0):
+            parent1 = self.matingpool.pop()
+            parent2 = self.matingpool.pop()
+            child_tuple = self.simulated_binary_crossover(
+                parent1.gene, parent2.gene)
+            for x in child_tuple:
+                offspring.append(genome(x))
+        return offspring
 
-    def crowded_tournament_selection(self):
-        # Calculate a crowding distance and rank
-        return False
+    def simulated_binary_crossover(self, parent_1, parent_2):
+        u = random.uniform(0, 1)
+        if u <= 0.5:
+            beta = (2 * u)**(1 / (c.N + 1))
+        else:
+            beta = 1 / ((2 * (1 - u))**(1 / (c.N + 1)))
+        child_1 = 0.5 * ((1 + beta) * parent_1 + (1 - beta) * parent_2)
+        child_2 = 0.5 * ((1 - beta) * parent_1 + (1 + beta) * parent_2)
+        return (child_1, child_2)
 
+    def admin_hain(self, offspring):
+        temp_list = []
+        random.shuffle(offspring)
+        for x in xrange(c.MUTATION_PROBABILITY * len(offspring)):
+                # p = offspring.pop()
+            temp_list.append(genome(polynomial_mutation(offspring.pop().gene)))
+        for x in temp_list:
+            offspring.append(x)
 
-parents = generation()  # stores a generation
+    def polynomial_mutation(parent):
+        u = random.uniform(0, 1)
+        if u < 0.5:
+            variation = ((2 * u)**(1.0 / c.MUTATION_INDEX + 1)) - 1
+        else:
+            variation = 1 - ((2 * (1 - u))**(1.0 / c.MUTATION_INDEX + 1))
+        return parent + (p.upper_bound - p.lower_bound) * variation
 
-for i in xrange(10):
-    i = genome()
-    i.initialize()
-    i.evaluate_fitness()
-    parents.insert(i)
-print 'POPULATION \n---------------------------------------------'
-parents.print_pop()
-print '-------------------------------------------------------------'
-parents.perform_nondominated_sorting()
-parents.tournament_selection()
-parents.print_pop()
-print '---------------MATINGPOOL-----------------------------'
-for x in parents.matingpool:
-    x.printgenome()
-for x in parents.fronts:
-    print '--------------------------------- CHECK----------------------'
-    for y in x:
-        y.printgenome()
-    tempfoo = sorted(x, key=lambda genome: genome.fitnesses[0], reverse=True)
-    for bob in tempfoo:
-        bob.printgenome()
-for x in parents.fronts:
-    print '--------------------------------- CHECK POST SORT----------------------'
-    for y in x:
-        y.printgenome()
+foo = generation()
+# foo.initialize()
+new_population = []
+foo.perform_non_dominated_sort()
+foo.calculate_crowding_distance()
+foo.create_mating_pool(False)
+# foo.population_members.sort(key=lambda x: x.front, reverse=True)
+new_population = foo.let_them_have_sex()
+for x in new_population:
+    x.print_genome()
