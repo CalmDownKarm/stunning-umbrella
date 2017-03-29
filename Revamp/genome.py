@@ -5,13 +5,16 @@ from random import random
 
 
 class genome(object):
-    def __init__(self):
-        # Fundamentals
-        # The actual Value of the gene
-        self.gene = random()*(2**(c.LENGTH_OF_BIT_STRING)-1)
+    def __init__(self, god=None):
+        if god is None:
+            # Fundamentals
+            # The actual Value of the gene
+            self.gene = random() * (2**(c.LENGTH_OF_BIT_STRING) - 1)
         # Now we have to scale the genome
-        self.gene = p.lower_bound + (p.upper_bound - p.lower_bound) * \
-            self.gene / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+            self.gene = p.lower_bound + (p.upper_bound - p.lower_bound) * \
+                self.gene / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+        else:
+            self.gene = god
         self.front = None  # The front in which the genome lies. front = rank
         # Stores the values of the gene along each objective function
         self.objective_function_values = []
@@ -20,6 +23,9 @@ class genome(object):
         self.Sp = set()  # Set of genomes dominated by the gene.
         # Used for Crowding distance
         self.crowding_distance = None
+        self.evaluate_objective_functions()
+
+
 
     def print_genome(self):
         print 'Gene: ' + repr(self.gene)\
@@ -33,15 +39,15 @@ class genome(object):
         self.objective_function_values.append(p.fitness_1(self.gene))
         self.objective_function_values.append(p.fitness_2(self.gene))
 
-    def dominates(self,genome_2):
-    	greaterorequal = 0
-    	for x in xrange(0,p.number_of_objectives):
-    		if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
-    			greaterorequal+=1
-    	if(greaterorequal==p.number_of_objectives):
-    		return True
-    	else:
-    		return False
+    def dominates(self, genome_2):
+        greaterorequal = 0
+        for x in xrange(0, p.number_of_objectives):
+            if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
+                greaterorequal += 1
+        if(greaterorequal == p.number_of_objectives):
+            return True
+        else:
+            return False
 
 # foo = genome()
 # foo.evaluate_objective_functions()
