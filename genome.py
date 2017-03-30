@@ -39,7 +39,17 @@ class genome(object):
         self.objective_function_values.append(p.fitness_1(self.gene))
         self.objective_function_values.append(p.fitness_2(self.gene))
 
-    def dominates(self, genome_2):
+    def dominates_lesser(self,genome2):
+        lesserorequal = 0
+        for x in xrange(0,p.number_of_objectives):
+            if self.objective_function_values[x] <= genome2.objective_function_values[x]:
+                lesserorequal+=1
+        if(lesserorequal == p.number_of_objectives):
+            return True
+        else:
+            return False
+            
+    def dominates_greater(self, genome_2):
         greaterorequal = 0
         for x in xrange(0, p.number_of_objectives):
             if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
