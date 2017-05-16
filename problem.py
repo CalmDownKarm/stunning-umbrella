@@ -4,8 +4,8 @@
 
 class Problem(object):
     # def __init__(self):
-    lower_bound = -1000
-    upper_bound = 1000
+    lower_bound = -2
+    upper_bound = 2
     number_of_objectives = 2
 
 

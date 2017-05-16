@@ -2,9 +2,12 @@ import moga_constant as c
 from generation import generation
 from genome import genome
 import matplotlib.pyplot as plt
+from problem import problem_instance as p
 
 p_0 = generation()
 p_0.initialize()
+x_fitness = []
+y_fitness= []
 # print 'PRE FIRST SORT'
 # p_0.nigger()
 p_0.perform_non_dominated_sort()
@@ -45,6 +48,10 @@ while(iteration_counter<c.NUMBER_OF_ITERATIONS):
     p_t.merge(p_next)
     p_t.perform_non_dominated_sort()
     p_t.count_number_of_fronts()
+    # print p_t.population_members[-1].gene
+    for member in p_t.population_members:
+    	x_fitness.append(p.fitness_1(member.gene))
+    	y_fitness.append(p.fitness_2(member.gene))
 y=[]
 for x in xrange(0,c.NUMBER_OF_ITERATIONS):
     y.append(x)
@@ -52,6 +59,15 @@ for x in xrange(0,c.NUMBER_OF_ITERATIONS):
 print best_fit
 plt.scatter(y, best_fit)
 plt.show()
+
+# x_fitness.sort()
+# y_fitness.sort()
+# print x_fitness[-10:]
+# print y_fitness[-10:]
+plt.scatter(x_fitness,y_fitness)
+plt.show()
+# print x_fitness[-10:]
+# print y_fitness[-10:]
 
 # foo = generation()
 # bitch1 = generation()
