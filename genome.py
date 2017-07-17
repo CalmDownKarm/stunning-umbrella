@@ -2,19 +2,16 @@
 import moga_constant as c
 from problem import problem_instance as p
 from random import random
+import pprint
 
 
 class genome(object):
     def __init__(self, god=None):
-        if god is None:
-            # Fundamentals
+        if god is None:           
             # The actual Value of the gene
-            self.gene = random() * (2**(c.LENGTH_OF_BIT_STRING) - 1)
-        # Now we have to scale the genome
-            self.gene = p.lower_bound + (p.upper_bound - p.lower_bound) * \
-                self.gene / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+            self.genes = [scale_genome(random()*(2**(c.LENGTH_OF_BIT_STRING) - 1)) for x in range(0,c.NUMBER_OF_VARIABLES)]             
         else:
-            self.gene = god
+            self.genes = god
         self.front = None  # The front in which the genome lies. front = rank
         # Stores the values of the gene along each objective function
         self.objective_function_values = []
@@ -25,24 +22,21 @@ class genome(object):
         self.crowding_distance = None
         self.evaluate_objective_functions()
 
-
-
     def print_genome(self):
-        print 'Gene: ' + repr(self.gene)\
-            + '\nfitness_1: ' + repr(self.objective_function_values[0])\
-            + '\nfitness_2: ' + repr(self.objective_function_values[1])\
+        pprint.pprint('Gene: ' + repr(self.genes)\
+            + '\nfitnesses ' + repr(self.objective_function_values)\
             + '\nnp: ' + repr(self.np)\
             + '\nFront: ' + repr(self.front)\
-            + '\nCrowding Distance: ' + repr(self.crowding_distance)
+            + '\nCrowding Distance: ' + repr(self.crowding_distance))
 
     def evaluate_objective_functions(self):
-        self.objective_function_values.append(p.fitness_1(self.gene))
-        self.objective_function_values.append(p.fitness_2(self.gene))
+        self.objective_function_values = [y(self.genes) for y in p.fitness_functions]
 
     def dominates_lesser(self,genome2):
+        #TODO: CHECK RESPONSE FOR UNEQUAL LIST SIZES
         lesserorequal = 0
-        for x in xrange(0,p.number_of_objectives):
-            if self.objective_function_values[x] <= genome2.objective_function_values[x]:
+        for x,y in zip(self.objective_function_values,genome2.objective_function_values):
+            if x<=y:
                 lesserorequal+=1
         if(lesserorequal == p.number_of_objectives):
             return True
@@ -51,14 +45,14 @@ class genome(object):
             
     def dominates_greater(self, genome_2):
         greaterorequal = 0
-        for x in xrange(0, p.number_of_objectives):
-            if self.objective_function_values[x] >= genome_2.objective_function_values[x]:
+        for x,y in zip(self.objective_function_values,genome2.objective_function_values):
+            if x>=y:
                 greaterorequal += 1
         if(greaterorequal == p.number_of_objectives):
             return True
         else:
             return False
 
-# foo = genome()
-# foo.evaluate_objective_functions()
-# foo.print_genome()
+def scale_genome(crud):
+    return p.lower_bound + (p.upper_bound - p.lower_bound) * \
+                crud / ((2**c.LENGTH_OF_BIT_STRING) - 1)
