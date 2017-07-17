@@ -15,25 +15,20 @@ class generation(object):
         self.no_of_fronts = 0  # Stores total Number of fronts.
 
     def initialize(self):
-        for i in xrange(0, c.POPULATION_SIZE):
-            i = genome()
-            # i.evaluate_objective_functions()
-            self.population_members.append(i)
+        self.population_members = [genome() for i in range(0, c.POPULATION_SIZE)]
+        # print(self.population_members)
+
+
     def merge(self,Qt):
-        for x in Qt:
-            self.population_members.append(x)
+        self.population_members+=Qt
         self.count_number_of_fronts()
 
     def print_population(self):
-        print '----Population Begin---------'
-        for i in self.population_members:
-            i.print_genome()
-            print '----'
-        print '----------Population End-----'
-
-    def merge_qt(self, Qt):
-        for x in Qt:
-            self.population_members.append(x)
+        print ('----Population Begin---------')
+        # map(lambda x:x.print_genome(),self.population_members)
+        for x in self.population_members:
+            x.print_genome()
+        print ('----------Population End-----')
 
     def create_mating_pool(self, flag):
         # call flag as true if first iteration. else false
@@ -196,3 +191,7 @@ class generation(object):
         for x in self.population_members:
             if(x.front == None):
                 x.print_genome()
+
+foo = generation()
+foo.initialize()
+foo.print_population()

@@ -31,6 +31,7 @@ class genome(object):
 
     def evaluate_objective_functions(self):
         self.objective_function_values = [y(self.genes) for y in p.fitness_functions]
+        # self.print_genome()
 
     def dominates_lesser(self,genome2):
         #TODO: CHECK RESPONSE FOR UNEQUAL LIST SIZES
