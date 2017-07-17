@@ -25,9 +25,8 @@ class generation(object):
 
     def print_population(self):
         print ('----Population Begin---------')
-        # map(lambda x:x.print_genome(),self.population_members)
-        for x in self.population_members:
-            x.print_genome()
+        from operator import methodcaller
+        [x.print_genome() for x in self.population_members]
         print ('----------Population End-----')
 
     def create_mating_pool(self, flag):
