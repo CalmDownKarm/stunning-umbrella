@@ -9,8 +9,8 @@ def fitness_2(x):
 
 class Problem(object):
     # def __init__(self):
-    lower_bound = -2
-    upper_bound = 2
+    lower_bound = [-2,-2]
+    upper_bound = [2,2]
     number_of_objectives = 2
     fitness_functions = [fitness_1,fitness_2]
 

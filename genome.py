@@ -9,7 +9,8 @@ class genome(object):
     def __init__(self, god=None):
         if god is None:           
             # The actual Value of the gene
-            self.genes = [scale_genome(random()*(2**(c.LENGTH_OF_BIT_STRING) - 1)) for x in range(0,c.NUMBER_OF_VARIABLES)]             
+            self.genes = [random()*(2**(c.LENGTH_OF_BIT_STRING) - 1) for x in range(0,c.NUMBER_OF_VARIABLES)]
+            self.genes = scale_genome(self.genes)             
         else:
             self.genes = god
         self.front = None  # The front in which the genome lies. front = rank
@@ -55,5 +56,8 @@ class genome(object):
             return False
 
 def scale_genome(crud):
-    return p.lower_bound + (p.upper_bound - p.lower_bound) * \
-                crud / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+    for x,y,z in zip(crud,p.upper_bound,p.lower_bound):
+        x=z+(y-z)*x/((2**c.LENGTH_OF_BIT_STRING)-1)
+    # return p.lower_bound + (p.upper_bound - p.lower_bound) * \
+    #             crud / ((2**c.LENGTH_OF_BIT_STRING) - 1)
+    return crud

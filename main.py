@@ -29,14 +29,15 @@ p_t.count_number_of_fronts()
 iteration_counter = 0
 best_fit = []
 while(iteration_counter<c.NUMBER_OF_ITERATIONS):
-    best_fit.append(p_t.population_members[0].gene)
-    print iteration_counter
+    best_fit.append(p_t.population_members[0].genes)
+    print(iteration_counter)
     iteration_counter+=1
     # print "------------------iteration counter : " + repr(iteration_counter)
     # p_t.print_population()
     # p_t.print_population()
     p_t.calculate_crowding_distance()
     #print iteration_counter
+    print(p_t.population_members)
     p_t.create_mating_pool(False)
     q_next = p_t.let_them_have_sex()
     combinePandQ = generation()
@@ -50,13 +51,10 @@ while(iteration_counter<c.NUMBER_OF_ITERATIONS):
     p_t.count_number_of_fronts()
     # print p_t.population_members[-1].gene
     for member in p_t.population_members:
-    	x_fitness.append(p.fitness_1(member.gene))
-    	y_fitness.append(p.fitness_2(member.gene))
-y=[]
-for x in xrange(0,c.NUMBER_OF_ITERATIONS):
-    y.append(x)
-
-print best_fit
+    	x_fitness.append(p.fitness_functions[0](member.genes))
+    	y_fitness.append(p.fitness_functions[1](member.genes))
+y = [x for x in range(0,c.NUMBER_OF_ITERATIONS)]
+print(best_fit)
 plt.scatter(y, best_fit)
 plt.show()
 

@@ -4,6 +4,7 @@ from genome import genome
 import numpy.random as r
 from problem import problem_instance as p
 import random
+import pprint
 
 
 class generation(object):
@@ -16,6 +17,7 @@ class generation(object):
 
     def initialize(self):
         self.population_members = [genome() for i in range(0, c.POPULATION_SIZE)]
+        # print()
         # print(self.population_members)
 
 
@@ -32,7 +34,9 @@ class generation(object):
     def create_mating_pool(self, flag):
         # call flag as true if first iteration. else false
         # Run the tournament and return a matingpool
+        print("in create_mating_pool")
         if(flag):
+            print("in if")
             # if crowding distance isn't set use only front.
             while(len(self.matingpool) < len(self.population_members)):
                 p = r.randint(0, len(self.population_members), 2)
@@ -46,8 +50,12 @@ class generation(object):
                     else:
                         self.matingpool.append(geneA)
                         self.matingpool.append(geneB)
+            print("out if")
         else:
+            print("in else")
             while(len(self.matingpool) < len(self.population_members)):
+                # print(self.population_members)
+                # print(len(self.population_members))
                 p = r.randint(0, len(self.population_members), 2)
                 if(p[0] != p[1]):
                     geneA = self.population_members[p[0]]
@@ -64,6 +72,8 @@ class generation(object):
                         else:
                             self.matingpool.append(geneA)
                             self.matingpool.append(geneB)
+            print("out else")
+        print("out create_mating_pool")
 
     def perform_non_dominated_sort(self):
         for x in self.population_members:
@@ -83,8 +93,7 @@ class generation(object):
         groups = defaultdict(list)
         for obj in self.population_members:
             groups[obj.np].append(obj)
-        new_list = groups.values()
-        
+        new_list = list(groups.values())
         temp_front = new_list[0]
         for x in temp_front:
             x.front = front_counter
@@ -109,34 +118,37 @@ class generation(object):
         
 
     def calculate_crowding_distance(self):
-        new_members = []
+        # new_members = []
         #print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"+str(self.no_of_fronts)
-        for front_no in xrange(1, self.no_of_fronts + 1):
-            temp = []
-            for member in self.population_members:
-                if member.front == front_no:
-                    temp.append(member)
+        for front_no in range(1, self.no_of_fronts + 1):
+            temp = [x for x in self.population_members if x.front==front_no]
+            # for member in self.population_members:
+            #     if member.front == front_no:
+            #         temp.append(member)
             if(len(temp) == 1):
                 temp[0].crowding_distance = float('inf')
             else:
                 for member in temp:
                     member.crowding_distance = 0
-                for y in xrange(0, p.number_of_objectives):
+                for y in range(0, p.number_of_objectives):
                     temp.sort(key=lambda x: x.objective_function_values[y])
                     temp[0].crowding_distance = float("inf")
-                    temp[len(temp) - 1].crowding_distance = float("inf")
-                    if temp[0].gene == temp[-1].gene:
-                        for i in xrange(1, len(temp) - 1):
-                            temp[i].crowding_distance = 0
+                    temp[-1].crowding_distance = float("inf")
+                    if temp[0].genes == temp[-1].genes:
+                        for t in temp[1:-1]:
+                            t.crowding_distance = 0
+                        # for i in range(1, len(temp) - 1):
+                        #     temp[i].crowding_distance = 0 
                     else:   
-                        for i in xrange(1, len(temp) - 1):
+                        for i in range(1, len(temp) - 1):
                             temp[i].crowding_distance += (temp[i + 1].objective_function_values[y] -
                                                           temp[i - 1].objective_function_values[
                                 y]) / (temp[len(temp) - 1].objective_function_values[y] - temp[0].objective_function_values[y])
-            for boob in temp:
-                new_members.append(boob)
+            new_members = [x for x in temp]
+            # for boob in temp:
+            #     new_members.append(boob)
         self.population_members = []
-        self.population_members = new_members
+        self.population_members += new_members
 
     def let_them_have_sex(self):
         offspring = []
@@ -146,32 +158,50 @@ class generation(object):
             parent1 = self.matingpool.pop()
             parent2 = self.matingpool.pop()
             child_tuple = self.simulated_binary_crossover(
-                parent1.gene, parent2.gene)
-            for x in child_tuple:
-                offspring.append(genome(x))
-        mutated_offspring = self.admin_hain(offspring)
-        return mutated_offspring
+                parent1.genes, parent2.genes) #Genes instead of Gene
+            offspring+=[genome(x) for x in child_tuple]
+            # for x in child_tuple:
+            #     offspring.append(genome(x))
+        # mutated_offspring = self.admin_hain(offspring)
+        # return mutated_offspring
+        return self.admin_hain(offspring)
 
-    def simulated_binary_crossover(self, parent_1, parent_2):
+    def simulated_binary_crossover(self, parent1, parent2):
         u = random.uniform(0, 1)
         if u <= 0.5:
             beta = (2 * u)**(1 / (c.N + 1))
         else:
             beta = 1 / ((2 * (1 - u))**(1 / (c.N + 1)))
-        child_1 = 0.5 * ((1 + beta) * parent_1 + (1 - beta) * parent_2)
-        child_2 = 0.5 * ((1 - beta) * parent_1 + (1 + beta) * parent_2)
+
+        def sbx(x,y,flag = False):
+            if flag:
+                return 0.5 * ((1 - beta) * x + (1 + beta) * y)
+            else:
+                return 0.5 * ((1 + beta) * x + (1 - beta) * y)
+        child_1 = [sbx(x,y) for x,y in zip(parent1,parent2)]
+        # for x,y in zip(parent1,parent2):
+        #     child_1.append(0.5 * ((1 + beta) * x + (1 - beta) * y))
+        child_2 = [sbx(x,y,True) for x,y in zip(parent1,parent2)]
+        
+        # for x,y in zip(parent1,parent2):
+        #     child_2.append(0.5 * ((1 - beta) * x + (1 + beta) * y))
+        # child_1 = 0.5 * ((1 + beta) * parent_1 + (1 - beta) * parent_2)
+        # child_2 = 0.5 * ((1 - beta) * parent_1 + (1 + beta) * parent_2)
         return (child_1, child_2)
 
     def admin_hain(self, offspring):
         temp_list = []
         random.shuffle(offspring)
-        for x in xrange(int(c.MUTATION_PROBABILITY * len(offspring))):
+        for x in range(int(c.MUTATION_PROBABILITY * len(offspring))):
                 # p = offspring.pop()
             temp_list.append(
-                genome(self.polynomial_mutation(offspring.pop().gene)))
-        for x in temp_list:
-            offspring.append(x)
+                genome(self.polynomial_mutation(offspring.pop().genes)))
+        offspring+=temp_list
+        # for x in temp_list:
+        #     offspring.append(x)
         return offspring
+   
+
     def count_number_of_fronts(self):
         frontset = set()
         for x in self.population_members:
@@ -184,13 +214,16 @@ class generation(object):
             variation = ((2 * u)**(1.0 / c.MUTATION_INDEX + 1)) - 1
         else:
             variation = 1 - ((2 * (1 - u))**(1.0 / c.MUTATION_INDEX + 1))
-        return parent + (p.upper_bound - p.lower_bound) * variation
+        
+        for x,y,z in zip(parent,p.upper_bound,p.lower_bound):
+            x=x+(y-z)*variation
+        return parent
 
-    def nigger(self):
-        for x in self.population_members:
-            if(x.front == None):
-                x.print_genome()
+    # def nigger(self):
+    #     for x in self.population_members:
+    #         if(x.front == None):
+    #             x.print_genome()
 
-foo = generation()
-foo.initialize()
-foo.print_population()
+# foo = generation()
+# foo.initialize()
+# foo.print_population()
