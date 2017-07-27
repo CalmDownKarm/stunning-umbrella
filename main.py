@@ -4,7 +4,7 @@ from genome import genome,scale_genome
 import matplotlib.pyplot as plt
 from problem import problem_instance as p
 
-from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d import Axes3D
 
 p_0 = generation()
 p_0.initialize()
@@ -79,23 +79,23 @@ print(best_fit)
 # plt.scatter(y, best_fit)
 # plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
 
 
-xs = [x[0] for x in best_fit]
-ys = [y[1] for y in best_fit]
-zs = [x for x in range(0,c.NUMBER_OF_ITERATIONS)]
-print(xs)
-print(ys)
-ax.scatter(xs, ys, zs)
+# xs = [x[0] for x in best_fit]
+# ys = [y[1] for y in best_fit]
+# zs = [x for x in range(0,c.NUMBER_OF_ITERATIONS)]
+# print(xs)
+# print(ys)
+# ax.scatter(xs, ys, zs)
 
-ax.set_xlabel('X Label')
-ax.set_ylabel('Y Label')
-ax.set_zlabel('Z Label')
-# ax.set_ylim([-0.1,0.1])
-# ax.set_xlim([-0.1,0.1])
-plt.show()
+# ax.set_xlabel('X Label')
+# ax.set_ylabel('Y Label')
+# ax.set_zlabel('Z Label')
+# # ax.set_ylim([-0.1,0.1])
+# # ax.set_xlim([-0.1,0.1])
+# plt.show()
 
 
 # x_fitness.sort()
