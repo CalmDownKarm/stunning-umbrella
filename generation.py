@@ -34,9 +34,9 @@ class generation(object):
     def create_mating_pool(self, flag):
         # call flag as true if first iteration. else false
         # Run the tournament and return a matingpool
-        print("in create_mating_pool")
+        # print("in create_mating_pool")
         if(flag):
-            print("in if")
+            # print("in if")
             # if crowding distance isn't set use only front.
             while(len(self.matingpool) < len(self.population_members)):
                 p = r.randint(0, len(self.population_members), 2)
@@ -50,9 +50,9 @@ class generation(object):
                     else:
                         self.matingpool.append(geneA)
                         self.matingpool.append(geneB)
-            print("out if")
+            # print("out if")
         else:
-            print("in else")
+            # print("in else")
             while(len(self.matingpool) < len(self.population_members)):
                 # print(self.population_members)
                 # print(len(self.population_members))
@@ -72,8 +72,8 @@ class generation(object):
                         else:
                             self.matingpool.append(geneA)
                             self.matingpool.append(geneB)
-            print("out else")
-        print("out create_mating_pool")
+            # print("out else")
+        # print("out create_mating_pool")
 
     def perform_non_dominated_sort(self):
         for x in self.population_members:
@@ -118,7 +118,7 @@ class generation(object):
         
 
     def calculate_crowding_distance(self):
-        # new_members = []
+        new_members = []
         #print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"+str(self.no_of_fronts)
         for front_no in range(1, self.no_of_fronts + 1):
             temp = [x for x in self.population_members if x.front==front_no]
@@ -144,7 +144,7 @@ class generation(object):
                             temp[i].crowding_distance += (temp[i + 1].objective_function_values[y] -
                                                           temp[i - 1].objective_function_values[
                                 y]) / (temp[len(temp) - 1].objective_function_values[y] - temp[0].objective_function_values[y])
-            new_members = [x for x in temp]
+            new_members+= [x for x in temp]
             # for boob in temp:
             #     new_members.append(boob)
         self.population_members = []
