@@ -18,7 +18,7 @@ y_fitness= []
 p_0.perform_non_dominated_sort()
 #p_0.population_members[0].print_genome()
 
-q_0 = p_0.let_them_have_sex() #TODO:fix this shit
+q_0 = p_0.reproduce() #TODO:fix this shit
 print("first kids == "+(str(len(q_0))))
 combinePandQ = generation()
 combinePandQ.merge(p_0.population_members)
@@ -50,7 +50,7 @@ while(iteration_counter<c.NUMBER_OF_ITERATIONS):
     # print("population members after crowding distance  === " + str(len(p_t.population_members)))
     # print(p_t.population_members)
     p_t.create_mating_pool(False)
-    q_next = p_t.let_them_have_sex()
+    q_next = p_t.reproduce()
     q_next = [genome(scale_genome(x.genes)) for x in q_next]	
     # for vale in q_next:
     # 	for val in vale:

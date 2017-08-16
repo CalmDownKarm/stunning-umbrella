@@ -150,7 +150,7 @@ class generation(object):
         self.population_members = []
         self.population_members += new_members
 
-    def let_them_have_sex(self):
+    def reproduce(self):
         offspring = []
         # print "mating pool"
         random.shuffle(self.matingpool)
@@ -162,9 +162,9 @@ class generation(object):
             offspring+=[genome(x) for x in child_tuple]
             # for x in child_tuple:
             #     offspring.append(genome(x))
-        # mutated_offspring = self.admin_hain(offspring)
+        # mutated_offspring = self.mutation_wraper(offspring)
         # return mutated_offspring
-        return self.admin_hain(offspring)
+        return self.mutation_wraper(offspring)
 
     def simulated_binary_crossover(self, parent1, parent2):
         u = random.uniform(0, 1)
@@ -189,7 +189,7 @@ class generation(object):
         # child_2 = 0.5 * ((1 - beta) * parent_1 + (1 + beta) * parent_2)
         return (child_1, child_2)
 
-    def admin_hain(self, offspring):
+    def mutation_wraper(self, offspring):
         temp_list = []
         random.shuffle(offspring)
         for x in range(int(c.MUTATION_PROBABILITY * len(offspring))):
